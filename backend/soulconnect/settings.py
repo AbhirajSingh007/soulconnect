@@ -81,20 +81,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'soulconnect.wsgi.application'
 
-# Database - PostgreSQL on Azure
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='soulconnect'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': config('DB_SSL_MODE', default='prefer'),
-        },
+# Database Configuration
+# Use DATABASE_URL if available (Render), otherwise use individual settings
+import dj_database_url
+
+DATABASE_URL = config('DATABASE_URL', default='')
+
+if DATABASE_URL:
+    # Render PostgreSQL (uses DATABASE_URL)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Individual database settings (Azure/custom PostgreSQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME', default='soulconnect'),
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+            'OPTIONS': {
+                'sslmode': config('DB_SSL_MODE', default='prefer'),
+            },
+        }
+    }
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
