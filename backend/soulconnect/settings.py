@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_filters',
+    'whitenoise.runserver_nostatic',  # Faster static file serving
     'drf_spectacular',
-    'storages',
+    'storages',  # Only loaded when Azure is configured
     
     # Local apps
     'accounts',
@@ -126,15 +127,20 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files - Azure Blob Storage
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-
+# Media files - Azure Blob Storage (only if configured)
 AZURE_ACCOUNT_NAME = config('AZURE_STORAGE_ACCOUNT_NAME', default='')
 AZURE_ACCOUNT_KEY = config('AZURE_STORAGE_ACCOUNT_KEY', default='')
-AZURE_CONTAINER = config('AZURE_STORAGE_CONTAINER', default='media')
-AZURE_SSL = True
-AZURE_CUSTOM_DOMAIN = config('AZURE_CUSTOM_DOMAIN', default=None)
-AZURE_URL_EXPIRATION_SECS = 3600  # 1 hour for private access
+
+if AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY:
+    DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+    AZURE_CONTAINER = config('AZURE_STORAGE_CONTAINER', default='media')
+    AZURE_SSL = True
+    AZURE_CUSTOM_DOMAIN = config('AZURE_CUSTOM_DOMAIN', default=None)
+    AZURE_URL_EXPIRATION_SECS = 3600  # 1 hour for private access
+else:
+    # Use local storage in development
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -213,13 +219,15 @@ RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='')
 RAZORPAY_WEBHOOK_SECRET = config('RAZORPAY_WEBHOOK_SECRET', default='')
 
-# Celery Configuration
-CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
+# Celery Configuration (only if Redis is available)
+REDIS_URL = config('REDIS_URL', default='')
+if REDIS_URL:
+    CELERY_BROKER_URL = REDIS_URL
+    CELERY_RESULT_BACKEND = REDIS_URL
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TIMEZONE = TIME_ZONE
 
 # API Documentation
 SPECTACULAR_SETTINGS = {

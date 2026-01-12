@@ -1,0 +1,35 @@
+# Render Blueprint - Optimized for faster deployments
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: soulconnect-api
+    env: python
+    region: singapore  # Change to your preferred region
+    plan: free  # or starter, standard, etc.
+    buildCommand: ./build.sh
+    startCommand: gunicorn soulconnect.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --worker-class gthread
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      - key: PIP_DISABLE_PIP_VERSION_CHECK
+        value: "1"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+    # Enable build caching for faster subsequent deploys
+    autoDeploy: true
+    rootDir: backend

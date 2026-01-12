@@ -2,8 +2,16 @@
 # Exit on error
 set -o errexit
 
-# Install dependencies
-pip install -r requirements.txt
+# Optimize pip for faster installs
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PIP_NO_CACHE_DIR=0
+
+# Upgrade pip for better dependency resolution
+pip install --upgrade pip setuptools wheel
+
+# Install dependencies with optimizations
+# --no-deps first pass for pre-built wheels, then full install
+pip install -r requirements.txt --prefer-binary
 
 # Collect static files
 python manage.py collectstatic --no-input
