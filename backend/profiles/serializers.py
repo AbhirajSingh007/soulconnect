@@ -161,6 +161,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = Profile
         fields = [
             'full_name', 'height_cm', 'body_type', 'complexion',
+            'marital_status', 'religion', 'caste', 'sub_caste', 'mother_tongue',
             'education', 'education_detail', 'profession', 'company_name', 'annual_income',
             'city', 'state', 'country', 'pincode',
             'father_occupation', 'mother_occupation', 'siblings',

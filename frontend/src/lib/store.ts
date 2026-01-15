@@ -44,7 +44,7 @@ interface AuthState {
   isLoading: boolean
   isAuthenticated: boolean
   error: string | null
-  
+
   // Actions
   login: (email: string, password: string) => Promise<boolean>
   register: (data: RegisterData) => Promise<boolean>
@@ -65,14 +65,14 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null })
-        
+
         try {
           const response = await authAPI.login({ email, password })
           const { tokens, user } = response.data
-          
+
           // Store tokens
           tokenUtils.setTokens(tokens.access, tokens.refresh)
-          
+
           // Update state
           set({
             user,
@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: null,
           })
-          
+
           toast.success('Welcome back!')
           return true
         } catch (error: any) {
@@ -93,17 +93,17 @@ export const useAuthStore = create<AuthState>()(
 
       register: async (data: RegisterData) => {
         set({ isLoading: true, error: null })
-        
+
         try {
           const response = await authAPI.register(data)
-          
+
           toast.success('Registration successful! Please check your email to verify your account.')
           set({ isLoading: false, error: null })
           return true
         } catch (error: any) {
           const errors = error.response?.data
           let message = 'Registration failed. Please try again.'
-          
+
           if (errors) {
             // Handle field-specific errors
             if (errors.email) {
@@ -116,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
               message = errors.detail
             }
           }
-          
+
           set({ error: message, isLoading: false })
           toast.error(message)
           return false
@@ -125,7 +125,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         set({ isLoading: true })
-        
+
         try {
           const refreshToken = tokenUtils.getRefreshToken()
           if (refreshToken) {
@@ -151,9 +151,9 @@ export const useAuthStore = create<AuthState>()(
           set({ isAuthenticated: false, user: null })
           return
         }
-        
+
         set({ isLoading: true })
-        
+
         try {
           const response = await authAPI.getCurrentUser()
           set({
@@ -180,7 +180,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       clearError: () => set({ error: null }),
-      
+
       setLoading: (loading: boolean) => set({ isLoading: loading }),
     }),
     {
@@ -221,13 +221,13 @@ export interface Profile {
   country: string
   father_occupation: string
   mother_occupation: string
-  siblings: number
+  siblings: string
   family_type: string
   family_values: string
   diet: string
   smoking: string
   drinking: string
-  manglik: boolean
+  manglik: string
   star_sign: string
   about_me: string
   profile_views: number
@@ -280,7 +280,7 @@ interface ProfileState {
   profile: Profile | null
   isLoading: boolean
   error: string | null
-  
+
   fetchProfile: () => Promise<void>
   updateProfile: (data: Partial<Profile>) => Promise<boolean>
   updatePreferences: (data: Record<string, unknown>) => Promise<boolean>
@@ -295,7 +295,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
 
   fetchProfile: async () => {
     set({ isLoading: true, error: null })
-    
+
     try {
       const { profileAPI } = await import('./api')
       const response = await profileAPI.getMyProfile()
@@ -310,7 +310,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
 
   updateProfile: async (data: Partial<Profile>) => {
     set({ isLoading: true, error: null })
-    
+
     try {
       const { profileAPI } = await import('./api')
       const response = await profileAPI.updateProfile(data)
@@ -327,7 +327,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
 
   updatePreferences: async (data: Record<string, unknown>) => {
     set({ isLoading: true, error: null })
-    
+
     try {
       const { profileAPI } = await import('./api')
       const response = await profileAPI.updatePartnerPreferences(data as any)
@@ -349,7 +349,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
   },
 
   setProfile: (profile: Profile) => set({ profile }),
-  
+
   clearProfile: () => set({ profile: null, error: null }),
 }))
 
@@ -384,7 +384,7 @@ interface SubscriptionState {
   subscription: Subscription | null
   plans: SubscriptionPlan[]
   isLoading: boolean
-  
+
   fetchSubscription: () => Promise<void>
   fetchPlans: () => Promise<void>
   setSubscription: (subscription: Subscription) => void
@@ -397,7 +397,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
 
   fetchSubscription: async () => {
     set({ isLoading: true })
-    
+
     try {
       const { paymentAPI } = await import('./api')
       const response = await paymentAPI.getMySubscription()
@@ -409,7 +409,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
 
   fetchPlans: async () => {
     set({ isLoading: true })
-    
+
     try {
       const { paymentAPI } = await import('./api')
       const response = await paymentAPI.getPlans()

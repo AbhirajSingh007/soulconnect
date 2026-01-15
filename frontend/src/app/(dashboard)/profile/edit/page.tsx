@@ -34,7 +34,7 @@ const profileSchema = z.object({
   caste: z.string().optional(),
   sub_caste: z.string().optional(),
   mother_tongue: z.string().optional(),
-  manglik: z.boolean().optional(),
+  manglik: z.string().optional(),
   star_sign: z.string().optional(),
   birth_time: z.string().optional(),
   birth_place: z.string().optional(),
@@ -47,7 +47,7 @@ const profileSchema = z.object({
   family_values: z.string().optional(),
   father_occupation: z.string().optional(),
   mother_occupation: z.string().optional(),
-  siblings: z.number().min(0).max(20).optional().nullable(),
+  siblings: z.string().optional(),
   diet: z.string().optional(),
   smoking: z.string().optional(),
   drinking: z.string().optional(),
@@ -133,7 +133,7 @@ export default function ProfileEditPage() {
         caste: profile.caste || '',
         sub_caste: profile.sub_caste || '',
         mother_tongue: profile.mother_tongue || '',
-        manglik: profile.manglik || false,
+        manglik: profile.manglik || '',
         star_sign: profile.star_sign || '',
         birth_time: '',
         birth_place: '',
@@ -146,7 +146,7 @@ export default function ProfileEditPage() {
         family_values: profile.family_values || '',
         father_occupation: profile.father_occupation || '',
         mother_occupation: profile.mother_occupation || '',
-        siblings: profile.siblings || null,
+        siblings: profile.siblings || '',
         diet: profile.diet || '',
         smoking: profile.smoking || '',
         drinking: profile.drinking || '',
@@ -279,10 +279,12 @@ export default function ProfileEditPage() {
                 <Input label="Birth Time" type="time" {...register('birth_time')} />
                 <Input label="Birth Place" {...register('birth_place')} placeholder="Enter birth place" />
               </div>
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" {...register('manglik')} className="w-5 h-5 text-primary-600 rounded" />
-                <span>I am Manglik</span>
-              </label>
+              <Select label="Manglik" options={[
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' },
+                { value: 'partial', label: 'Partial' },
+                { value: 'dont_know', label: "Don't Know" }
+              ]} {...register('manglik')} />
             </CardContent>
           </Card>
         )}
@@ -316,7 +318,7 @@ export default function ProfileEditPage() {
                 <Input label="Father's Occupation" {...register('father_occupation')} placeholder="e.g., Retired Officer" />
                 <Input label="Mother's Occupation" {...register('mother_occupation')} placeholder="e.g., Homemaker" />
               </div>
-              <Input label="Number of Siblings" type="number" {...register('siblings', { valueAsNumber: true })} placeholder="e.g., 2" />
+              <Input label="Siblings" {...register('siblings')} placeholder="e.g., 1 elder brother, 1 younger sister" />
             </CardContent>
           </Card>
         )}

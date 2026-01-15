@@ -360,13 +360,13 @@ export interface ProfileData {
   pincode: string
   father_occupation: string
   mother_occupation: string
-  siblings: number
+  siblings: string
   family_type: string
   family_values: string
   diet: string
   smoking: string
   drinking: string
-  manglik: boolean
+  manglik: string
   star_sign: string
   birth_time: string
   birth_place: string
