@@ -19,7 +19,7 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
-# Create admin user if not exists
+# Create admin user and managers if not exists
 python << END
 import os
 import django
@@ -29,6 +29,7 @@ django.setup()
 
 from accounts.models import User
 
+# Create admin user
 if not User.objects.filter(email='admin@soulconnect.com').exists():
     User.objects.create_superuser(
         email='admin@soulconnect.com',
@@ -39,6 +40,50 @@ if not User.objects.filter(email='admin@soulconnect.com').exists():
     print('Admin user created!')
 else:
     print('Admin user already exists')
+
+# Create/Update manager accounts
+MANAGERS = [
+    {
+        'email': 'manager1@soulconnect.in',
+        'password': 'Manager@123',
+        'first_name': 'Manager',
+        'last_name': 'One',
+    },
+    {
+        'email': 'manager2@soulconnect.in',
+        'password': 'Manager@456',
+        'first_name': 'Manager',
+        'last_name': 'Two',
+    },
+]
+
+for manager_data in MANAGERS:
+    email = manager_data['email']
+    if User.objects.filter(email=email).exists():
+        user = User.objects.get(email=email)
+        user.set_password(manager_data['password'])
+        user.is_manager = True
+        user.is_active = True
+        user.is_email_verified = True
+        user.is_profile_complete = True
+        user.is_profile_approved = True
+        user.is_staff = True
+        user.save()
+        print(f'Manager account updated: {email}')
+    else:
+        User.objects.create_user(
+            email=email,
+            password=manager_data['password'],
+            first_name=manager_data['first_name'],
+            last_name=manager_data['last_name'],
+            is_manager=True,
+            is_active=True,
+            is_email_verified=True,
+            is_profile_complete=True,
+            is_profile_approved=True,
+            is_staff=True,
+        )
+        print(f'Manager account created: {email}')
 
 print('Setup complete!')
 END
