@@ -326,6 +326,35 @@ export default function ProfileDetailPage() {
         </div>
       </Card>
 
+      {/* All Photos Gallery */}
+      {photos.length > 1 && (
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="text-base">Photos ({photos.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-2">
+              {photos.map((photo, index) => (
+                <button
+                  key={photo.id}
+                  onClick={() => setCurrentPhotoIndex(index)}
+                  className={`relative aspect-square rounded-lg overflow-hidden bg-gray-100 ${
+                    index === currentPhotoIndex ? 'ring-2 ring-primary-500' : ''
+                  }`}
+                >
+                  <Image src={photo.image_url} alt={`Photo ${index + 1}`} fill className="object-cover" />
+                  {photo.is_primary && (
+                    <Badge variant="primary" size="sm" className="absolute top-1 left-1 text-[10px]">
+                      Main
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* About Me */}
       {profile.about_me && (
         <Card className="mb-4">
