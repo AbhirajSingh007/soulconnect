@@ -57,7 +57,7 @@ const Header: React.FC = () => {
             <Link href="/dashboard" className="flex items-center space-x-2">
               <Heart className="h-8 w-8 text-primary-600" fill="currentColor" />
               <span className="text-xl font-serif font-bold text-gray-900 hidden sm:block">
-                Soul<span className="text-primary-600">Connect</span>
+                KSHATRIYA<span className="text-primary-600">Connect</span>
               </span>
             </Link>
           </div>

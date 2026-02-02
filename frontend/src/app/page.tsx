@@ -11,7 +11,7 @@ export default function HomePage() {
             <Link href="/" className="flex items-center space-x-1.5 active:opacity-70 hover:opacity-80 transition">
               <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-primary-600" fill="currentColor" />
               <span className="text-lg sm:text-xl font-serif font-bold text-gray-900">
-                Soul<span className="text-primary-600">Connect</span>
+                KSHATRIYA<span className="text-primary-600">Connect</span>
               </span>
             </Link>
             <div className="flex items-center gap-2 sm:gap-4">
@@ -233,7 +233,7 @@ export default function HomePage() {
             <Link href="/terms" className="text-gray-500 hover:text-gray-900 active:text-gray-900 transition">Terms</Link>
             <Link href="/contact" className="text-gray-500 hover:text-gray-900 active:text-gray-900 transition">Contact</Link>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400">© {new Date().getFullYear()} SoulConnect</p>
+          <p className="text-xs sm:text-sm text-gray-400">© {new Date().getFullYear()} KSHATRIYAConnect</p>
         </div>
       </footer>
     </div>
