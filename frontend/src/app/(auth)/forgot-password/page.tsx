@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
           <Link href="/" className="flex items-center space-x-2">
             <Heart className="h-10 w-10 text-primary-600" fill="currentColor" />
             <span className="text-2xl font-serif font-bold text-gray-900">
-              Soul<span className="text-primary-600">Connect</span>
+              KSHATRIYA<span className="text-primary-600">Connect</span>
             </span>
           </Link>
         </div>
