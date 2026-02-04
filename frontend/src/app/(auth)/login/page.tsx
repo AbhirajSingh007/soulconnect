@@ -46,7 +46,7 @@ export default function LoginPage() {
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
           <Heart className="h-8 w-8 text-primary-600" fill="currentColor" />
           <span className="text-xl font-serif font-bold text-gray-900">
-            Soul<span className="text-primary-600">Connect</span>
+            KSHATRIYA<span className="text-primary-600">Connect</span>
           </span>
         </Link>
 
