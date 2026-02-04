@@ -666,16 +666,46 @@ export default function ProfileEditPage() {
           </Card>
         )}
 
-        {/* Save Button at Bottom (not shown for payment tab) */}
+        {/* Save Buttons at Bottom (not shown for payment tab) */}
         {activeTab !== 'payment' && (
-          <Button
-            type="submit"
-            className="w-full mt-4"
-            isLoading={isSaving}
-            disabled={!isDirty}
-          >
-            Save Changes
-          </Button>
+          <div className="flex gap-3 mt-4">
+            <Button
+              type="submit"
+              className="flex-1"
+              isLoading={isSaving}
+              disabled={!isDirty}
+            >
+              Save Changes
+            </Button>
+            <Button
+              type="button"
+              className="flex-1"
+              variant="outline"
+              isLoading={isSaving}
+              onClick={handleSubmit(async (data) => {
+                setIsSaving(true)
+                try {
+                  const cleanData = Object.fromEntries(
+                    Object.entries(data).filter(([_, v]) => v !== '' && v !== null)
+                  )
+                  await profileAPI.updateProfile(cleanData)
+                  await fetchProfile()
+                  toast.success('Profile updated!')
+                  // Move to next tab
+                  const currentIndex = TABS.findIndex(t => t.id === activeTab)
+                  if (currentIndex < TABS.length - 1) {
+                    setActiveTab(TABS[currentIndex + 1].id)
+                  }
+                } catch (error: any) {
+                  toast.error(error.response?.data?.detail || 'Failed to update')
+                } finally {
+                  setIsSaving(false)
+                }
+              })}
+            >
+              Save and Next
+            </Button>
+          </div>
         )}
       </form>
     </div>
